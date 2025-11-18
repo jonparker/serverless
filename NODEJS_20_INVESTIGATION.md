@@ -54,14 +54,31 @@ The current GitHub Actions workflows use the following Node.js versions:
 
 ## Analysis
 
+### Context: oss-serverless Fork and Serverless Framework V4
+
+**Important Context**: This repository (`oss-serverless/serverless`) is a community-maintained fork of the original Serverless Framework v3. It was created in response to Serverless Inc.'s announcement that [Serverless Framework V4 would adopt a new paid model](https://www.serverless.com/blog/serverless-framework-v4-a-new-model).
+
+According to the repository README:
+> "This repository is a maintained alternative to [Serverless Framework](https://github.com/serverless/serverless) v3. It exists for those that cannot upgrade to Serverless Framework v4 and is a drop-in replacement for v3."
+
+The fork is maintained by [Bref](https://bref.sh) maintainers and contributors, with the goal of providing continuity for users who need an open-source alternative to the commercial v4 offering.
+
+### Timeline Context
+
+The Node.js upgrade to v22 (September 2024) occurred **after** this repository was established as an independent fork. This means:
+
+1. **The fork inherited** the Node.js version strategy from the original Serverless Framework v3
+2. **The upgrade decision** (Node.js 16 → 22, skipping 18 and 20) was made by the oss-serverless maintainers as part of their independent maintenance strategy
+3. **The timing** (September 2024) shows the fork actively modernizing its test infrastructure while maintaining v3 compatibility
+
 ### Why Node.js 20 Was Skipped
 
 Based on the commit history, the repository's Node.js version progression was:
-- **Phase 1**: Multiple versions including very old ones (4, 10, 12, 14, 16)
-- **Phase 2**: Node.js 16 became the primary version (with 14, 12, 4 for compatibility testing)
-- **Phase 3**: Direct upgrade from Node.js 16 to Node.js 22 (September 2024)
+- **Phase 1**: Multiple versions including very old ones (4, 10, 12, 14, 16) - *Inherited from Serverless Framework v3*
+- **Phase 2**: Node.js 16 became the primary version (with 14, 12, 4 for compatibility testing) - *Inherited from Serverless Framework v3*
+- **Phase 3**: Direct upgrade from Node.js 16 to Node.js 22 (September 2024) - *Decision made by oss-serverless maintainers*
 
-The upgrade commit (4e43f1ab4) shows a deliberate decision to:
+The upgrade commit (4e43f1ab4) by Matthieu Napoli shows a deliberate decision to:
 1. Adopt Node.js 22 as the primary/latest version for testing
 2. Keep Node.js 16 for backward compatibility testing
 3. Skip Node.js 18 and Node.js 20 entirely
@@ -70,6 +87,7 @@ This is a common pattern where projects skip intermediate LTS versions when:
 - The older LTS (Node.js 16) is still supported
 - The newest LTS (Node.js 22) provides better features/performance
 - There's no specific requirement to test intermediate versions
+- The project is focused on stability and maintenance rather than bleeding-edge features
 
 ### Related Changes
 
@@ -143,10 +161,10 @@ However, given the current state with Node.js 22 as the latest and Node.js 16 fo
 ## Visual Timeline of Node.js Version Support
 
 ```
-Timeline of GitHub Actions Node.js Versions
+Timeline of GitHub Actions Node.js Versions (oss-serverless fork)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-2019-2020: Initial GitHub Actions Setup
+2019-2020: Initial GitHub Actions Setup (Serverless Framework v3)
 ├─ Node.js: 10, 12, 14
 └─ Focus: Multi-version compatibility
 
@@ -154,19 +172,26 @@ Timeline of GitHub Actions Node.js Versions
 ├─ Node.js: 12, 14, 16
 └─ Note: Node.js 16 added to matrix
 
-2022-2024 (June): Node.js 16 Era
+2022-2024 (June): Node.js 16 Era (Serverless Framework v3)
 ├─ Primary: Node.js 16
 ├─ Secondary: Node.js 14
 ├─ Legacy validation: Node.js 12, 4
 └─ Duration: ~3 years
 
+📍 2024: Serverless Framework V4 Announcement & Fork Creation
+├─ Serverless Inc. announces V4 with new paid model
+├─ Community creates oss-serverless fork as open-source alternative
+└─ Fork maintains v3 codebase and compatibility
+
 2024 (September 23): Major Version Jump (Commit 4e43f1ab4)
+├─ Context: oss-serverless fork modernizes CI independently
 ├─ Primary: Node.js 22 ← JUMPED FROM 16
 ├─ Secondary: Node.js 16
 ├─ Removed: Node.js 14, 12, 4
 └─ ⚠️  SKIPPED: Node.js 18, 20
+└─ Decision by: Matthieu Napoli (Bref maintainer)
 
-2024 (September 23) - Present: Current State
+2024 (September 23) - Present: Current State (oss-serverless)
 ├─ Primary: Node.js 22 (latest LTS)
 ├─ Compatibility: Node.js 16
 └─ Test Matrix: Simplified to 3 jobs
@@ -225,12 +250,22 @@ This pattern (skipping intermediate LTS versions) is common in open-source proje
 - Most breaking changes are documented and can be addressed proactively
 - Testing on the oldest supported and newest LTS provides good coverage
 
+### Fork-Specific Context
+
+For the oss-serverless fork specifically, this decision makes strategic sense:
+- **Maintenance Focus**: As a community-maintained fork focused on stability, minimizing test matrix complexity reduces burden
+- **Resource Constraints**: Open-source projects have limited CI/CD resources compared to commercial offerings
+- **v3 Compatibility Goal**: The fork aims to maintain Serverless Framework v3 compatibility, not chase every Node.js version
+- **Practical Approach**: Testing on Node.js 16 (widely used) and 22 (latest) covers the practical user base
+
 ## Conclusion
 
-**Node.js 20 was intentionally skipped** when the project upgraded from Node.js 16 to Node.js 22 in September 2024. This was not an oversight but rather a deliberate decision to:
-1. Adopt the latest LTS (Node.js 22) immediately
-2. Maintain backward compatibility testing (Node.js 16)
-3. Simplify the test matrix
-4. Reduce CI/CD overhead
+**Node.js 20 was intentionally skipped** when the oss-serverless fork upgraded from Node.js 16 to Node.js 22 in September 2024. This was not an oversight but rather a deliberate decision by the fork maintainers to:
+1. Adopt the latest LTS (Node.js 22) immediately for modernization
+2. Maintain backward compatibility testing (Node.js 16) for existing users
+3. Simplify the test matrix for easier maintenance
+4. Reduce CI/CD overhead for the community-maintained project
 
-The project never tested, documented, or referenced Node.js 20 in any capacity throughout its git history.
+**Important Context**: This decision was made after the fork was established as an independent alternative to Serverless Framework V4's paid model. The oss-serverless maintainers (led by Bref contributors like Matthieu Napoli) made this choice as part of their strategy to maintain a stable, open-source v3 alternative while modernizing the test infrastructure.
+
+The project never tested, documented, or referenced Node.js 20 in any capacity throughout its git history - neither in the original Serverless Framework v3 nor in the oss-serverless fork.
